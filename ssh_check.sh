@@ -1,5 +1,17 @@
 #!/bin/bash
 
+error() {
+	printf '\E[31m'; echo "$@"; printf '\E[0m'
+}
+success() {
+	printf '\E[32m'; echo "$@"; printf '\E[0m'
+}
+
+if [[ $EUID -ne 0 ]]; then
+	error "[!]This script must be run as root"
+	exit 1
+fi
+
 echo "[.]Grabbing OS version from os-release file..."
 if [ -e /etc/os-release ]; then
 	long_ver=$(grep "^ID=" /etc/os-release)
@@ -10,13 +22,13 @@ fi
 echo "[.]Determining OS version..."
 if [[ $(echo $long_ver | grep kali) != "" ]]; then
 	ver="kali"
-	echo "[+]Kali version found"
+	success "[+]Kali version found"
 elif [[ $(echo $long_ver | grep opensuse) != "" ]]; then
 	ver="opensuse"
-	echo "[+]OpenSUSE version found"
+	success "[+]OpenSUSE version found"
 elif [[ $(echo $long_ver | grep centos) != "" ]]; then
 	ver="centos"
-	echo "[+]CentOS version found"
+	success "[+]CentOS version found"
 fi
 
 echo "[.]Finding failed SSH attempts..."

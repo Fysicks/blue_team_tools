@@ -19,7 +19,7 @@ elif [[ $(echo $long_ver | grep centos) != "" ]]; then
 	echo "[+]CentOS version found"
 fi
 
-echo "[.]Printing failed SSH attempts..."
+echo "[.]Finding failed SSH attempts..."
 echo "-------------------------------------------------"
 echo "Bad Guy IPs:"
 if [[ $ver == "kali" ]]; then
@@ -27,5 +27,5 @@ if [[ $ver == "kali" ]]; then
 elif [[ $ver == "centos" ]]; then
         grep "Failed password" /var/log/secure|grep ssh|awk '{print "\t"$11}'|uniq
 elif [[ $ver == "opensuse" ]]; then
-        grep "Invalid user" /var/log/messages|grep ssh|awk '{print "\t"$8}'|uniq
+	grep "Failed password" /var/log/messages|grep ssh|awk '{print "\t"$(NF-3)}'|uniq
 fi
